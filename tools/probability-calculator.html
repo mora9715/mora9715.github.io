@@ -119,6 +119,24 @@
         const triesInput = document.getElementById('tries');
         const ctx = document.getElementById('probabilityChart').getContext('2d');
 
+        // Load saved values from localStorage if available
+        const savedProbability = localStorage.getItem('probability');
+        const savedTries = localStorage.getItem('tries');
+
+        if (savedProbability) {
+            probabilityInput.value = savedProbability;
+        }
+
+        if (savedTries) {
+            triesInput.value = savedTries;
+        }
+
+        // Function to save values to localStorage
+        function saveValuesToLocalStorage() {
+            localStorage.setItem('probability', probabilityInput.value);
+            localStorage.setItem('tries', triesInput.value);
+        }
+
         // Register the annotation plugin
         Chart.register(window['chartjs-plugin-annotation']);
 
@@ -287,12 +305,24 @@
         }
 
         // Add event listeners
-        probabilityInput.addEventListener('input', updateChart);
-        triesInput.addEventListener('input', updateChart);
+        probabilityInput.addEventListener('input', function() {
+            updateChart();
+            saveValuesToLocalStorage();
+        });
+        triesInput.addEventListener('input', function() {
+            updateChart();
+            saveValuesToLocalStorage();
+        });
 
         // Also update on change event to handle direct input
-        probabilityInput.addEventListener('change', updateChart);
-        triesInput.addEventListener('change', updateChart);
+        probabilityInput.addEventListener('change', function() {
+            updateChart();
+            saveValuesToLocalStorage();
+        });
+        triesInput.addEventListener('change', function() {
+            updateChart();
+            saveValuesToLocalStorage();
+        });
 
         // Listen for theme changes
         document.addEventListener('themeChanged', function() {
