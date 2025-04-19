@@ -3,113 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cumulative Event Probability Calculator</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.0.0/dist/chartjs-plugin-annotation.min.js"></script>
+    <title>Tools Collection</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <script>
+        // Apply theme from localStorage before page renders to prevent flash
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+    </script>
     <style>
-        :root {
-            /* Light theme variables */
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --heading-color: #333333;
-            --controls-bg: #f5f5f5;
-            --input-bg: #ffffff;
-            --input-border: #cccccc;
-            --explanation-bg: #f9f9f9;
-            --chart-grid: rgba(0, 0, 0, 0.1);
-            --blue-color: blue;
-            --blue-bg: rgba(0, 0, 255, 0.1);
-            --red-color: red;
-        }
-
-        [data-theme="dark"] {
-            /* Dark theme variables */
-            --bg-color: #222222;
-            --text-color: #ffffff;
-            --heading-color: #ffffff;
-            --controls-bg: #333333;
-            --input-bg: #444444;
-            --input-border: #555555;
-            --explanation-bg: #333333;
-            --chart-grid: rgba(215, 215, 215, 0.1);
-            --blue-color: #4d94ff;
-            --blue-bg: rgba(77, 148, 255, 0.1);
-            --red-color: #ff6666;
-        }
-
         body {
             font-family: Arial, sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             line-height: 1.6;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
         }
+
         .container {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background-color: var(--controls-bg);
-            padding: 20px;
+
+        .tools-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .tool-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 8px;
-            transition: background-color 0.3s;
+            padding: 15px;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
         }
-        .input-container {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        .input-field {
-            padding: 8px;
-            border: 1px solid var(--input-border);
-            border-radius: 4px;
-            font-size: 16px;
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-        }
-        .chart-container {
-            height: 400px;
-            margin-top: 20px;
-            background-color: var(--bg-color);
-            border-radius: 8px;
-            transition: background-color 0.3s;
-        }
-        h1, h3 {
+
+        .tool-card h3 {
+            margin-top: 0;
             color: var(--heading-color);
+        }
+
+        .tool-card p {
+            margin-bottom: 15px;
+        }
+
+        .tool-card a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: bold;
             transition: color 0.3s;
         }
-        .explanation {
-            background-color: var(--explanation-bg);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            transition: background-color 0.3s;
-        }
-        .theme-toggle {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 10px;
-        }
-        .theme-btn {
-            background-color: var(--controls-bg);
-            color: var(--text-color);
-            border: 1px solid var(--input-border);
-            border-radius: 4px;
-            padding: 8px 12px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .theme-btn:hover {
-            opacity: 0.9;
+
+        .tool-card a:hover {
+            color: var(--link-hover);
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -119,242 +74,20 @@
             <button id="themeToggle" class="theme-btn">Toggle Dark Mode</button>
         </div>
 
-        <h1>Cumulative Event Probability Calculator</h1>
+        <h1>Tools Collection</h1>
 
-        <div class="controls">
-            <div class="input-container">
-                <label for="probability">Single Event Probability:</label>
-                <input type="number" id="probability" class="input-field" min="0.01" max="1" step="0.01" value="0.2">
+        <p>Welcome to my collection of useful tools. Click on any tool below to use it.</p>
+
+        <div class="tools-list">
+            <div class="tool-card">
+                <h3>Cumulative Probability Calculator</h3>
+                <p>Calculate the probability of an event occurring at least once in a given number of tries.</p>
+                <a href="tools/probability-calculator.html">Open Calculator</a>
             </div>
-
-            <div class="input-container">
-                <label for="tries">Number of Tries:</label>
-                <input type="number" id="tries" class="input-field" min="1" max="500" step="1" value="10">
-            </div>
-        </div>
-
-        <div class="chart-container">
-            <canvas id="probabilityChart"></canvas>
-        </div>
-
-        <div class="explanation">
-            <h3>Mathematical Explanation</h3>
-            <p>The cumulative probability of an event occurring at least once in n tries is calculated using the formula:</p>
-            <p><strong>P(at least one success in n tries) = 1 - P(no success in n tries) = 1 - (1-p)^n</strong></p>
-            <p>Where:</p>
-            <ul>
-                <li>p is the probability of success in a single try</li>
-                <li>n is the number of tries</li>
-            </ul>
-            <p>This is based on the complement rule of probability and assumes that each try is independent.</p>
+            <!-- More tools can be added here in the future -->
         </div>
     </div>
 
-    <script>
-        // Get DOM elements
-        const probabilityInput = document.getElementById('probability');
-        const triesInput = document.getElementById('tries');
-        const themeToggleBtn = document.getElementById('themeToggle');
-        const ctx = document.getElementById('probabilityChart').getContext('2d');
-
-        // Theme handling
-        let currentTheme = 'light';
-
-        // Function to get CSS variable value
-        function getCssVariable(variableName) {
-            return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
-        }
-
-        // Function to toggle theme
-        function toggleTheme() {
-            const html = document.documentElement;
-            currentTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-            html.setAttribute('data-theme', currentTheme);
-
-            // Call updateChart to ensure all colors are updated properly
-            updateChart();
-        }
-
-        // Add event listener for theme toggle
-        themeToggleBtn.addEventListener('click', toggleTheme);
-
-        // Register the annotation plugin
-        Chart.register(window['chartjs-plugin-annotation']);
-
-        // Initialize chart
-        let chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Cumulative Probability',
-                    data: [],
-                    borderColor: getCssVariable('--blue-color'),
-                    backgroundColor: getCssVariable('--blue-bg'),
-                    borderWidth: 2,
-                    pointRadius: 0,
-                    fill: true
-                }, {
-                    label: 'Selected Tries',
-                    data: [],
-                    borderColor: getCssVariable('--red-color'),
-                    backgroundColor: getCssVariable('--red-color'),
-                    borderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                    type: 'scatter'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Number of Tries',
-                            color: getCssVariable('--text-color')
-                        },
-                        ticks: {
-                            color: getCssVariable('--text-color')
-                        },
-                        grid: {
-                            color: getCssVariable('--chart-grid')
-                        },
-                        min: 0
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Cumulative Probability',
-                            color: getCssVariable('--text-color')
-                        },
-                        ticks: {
-                            color: getCssVariable('--text-color')
-                        },
-                        grid: {
-                            color: getCssVariable('--chart-grid')
-                        },
-                        min: 0,
-                        max: 1.05
-                    }
-                },
-                plugins: {
-                    annotation: {
-                        annotations: {
-                            line1: {
-                                type: 'line',
-                                xMin: parseInt(triesInput.value),
-                                xMax: parseInt(triesInput.value),
-                                borderColor: getCssVariable('--red-color'),
-                                borderWidth: 2,
-                                borderDash: [6, 6],
-                                yMin: 0,
-                                yMax: 1,
-                                display: true
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: getCssVariable('--controls-bg'),
-                        titleColor: getCssVariable('--heading-color'),
-                        bodyColor: getCssVariable('--text-color'),
-                        borderColor: getCssVariable('--input-border'),
-                        borderWidth: 1,
-                        callbacks: {
-                            label: function(context) {
-                                if (context.datasetIndex === 1) {
-                                    return `After ${triesInput.value} tries: ${context.parsed.y.toFixed(4)}`;
-                                }
-                                return `Probability: ${context.parsed.y.toFixed(4)}`;
-                            }
-                        }
-                    },
-                    legend: {
-                        labels: {
-                            color: getCssVariable('--text-color')
-                        }
-                    },
-                    title: {
-                        color: getCssVariable('--heading-color')
-                    }
-                }
-            }
-        });
-
-        // Calculate cumulative probability
-        function calculateCumulativeProbability(singleEventProbability, maxTries) {
-            const tries = Array.from({length: maxTries}, (_, i) => i + 1);
-            const cumulativeProbs = tries.map(n => 1 - Math.pow(1 - singleEventProbability, n));
-            return { tries, cumulativeProbs };
-        }
-
-        // Update chart with new data
-        function updateChart() {
-            const probability = parseFloat(probabilityInput.value);
-            const tries = parseInt(triesInput.value);
-
-            // Calculate for a larger range to show the full curve
-            const maxTriesToShow = Math.max(tries * 2, 20);
-            const { tries: triesArray, cumulativeProbs } = calculateCumulativeProbability(probability, maxTriesToShow);
-
-            // Update chart data
-            chart.data.labels = triesArray;
-            chart.data.datasets[0].data = cumulativeProbs;
-
-            // Update vertical line and point
-            const probAtNumTries = cumulativeProbs[tries - 1];
-            chart.data.datasets[1].data = [{x: tries, y: probAtNumTries}];
-
-            // Update vertical line annotation
-            chart.options.plugins.annotation.annotations.line1.xMin = tries - 1;
-            chart.options.plugins.annotation.annotations.line1.xMax = tries - 1;
-            chart.options.plugins.annotation.annotations.line1.yMax = 1;
-            chart.options.plugins.annotation.annotations.line1.borderColor = getCssVariable('--red-color');
-
-            // Update chart title
-            chart.options.plugins.title = {
-                display: true,
-                text: `Cumulative Probability of Event (Single Event Probability = ${probability.toFixed(2)})`,
-                color: getCssVariable('--heading-color')
-            };
-
-            // Ensure theme colors are maintained
-            chart.data.datasets[0].borderColor = getCssVariable('--blue-color');
-            chart.data.datasets[0].backgroundColor = getCssVariable('--blue-bg');
-            chart.data.datasets[1].borderColor = getCssVariable('--red-color');
-            chart.data.datasets[1].backgroundColor = getCssVariable('--red-color');
-
-            // Update chart scales colors
-            chart.options.scales.x.title.color = getCssVariable('--text-color');
-            chart.options.scales.x.ticks.color = getCssVariable('--text-color');
-            chart.options.scales.x.grid.color = getCssVariable('--chart-grid');
-            chart.options.scales.y.title.color = getCssVariable('--text-color');
-            chart.options.scales.y.ticks.color = getCssVariable('--text-color');
-            chart.options.scales.y.grid.color = getCssVariable('--chart-grid');
-
-            // Update tooltip colors
-            chart.options.plugins.tooltip.backgroundColor = getCssVariable('--controls-bg');
-            chart.options.plugins.tooltip.titleColor = getCssVariable('--heading-color');
-            chart.options.plugins.tooltip.bodyColor = getCssVariable('--text-color');
-            chart.options.plugins.tooltip.borderColor = getCssVariable('--input-border');
-
-            // Update legend colors
-            chart.options.plugins.legend.labels.color = getCssVariable('--text-color');
-
-            chart.update();
-        }
-
-        // Add event listeners
-        probabilityInput.addEventListener('input', updateChart);
-        triesInput.addEventListener('input', updateChart);
-
-        // Also update on change event to handle direct input
-        probabilityInput.addEventListener('change', updateChart);
-        triesInput.addEventListener('change', updateChart);
-
-        // Initial chart update
-        updateChart();
-    </script>
+    <script src="js/theme.js"></script>
 </body>
 </html>

@@ -1,0 +1,80 @@
+/* Theme CSS Variables */
+:root {
+    /* Light theme variables */
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --heading-color: #333333;
+    
+    /* Common UI elements */
+    --card-bg: #f5f5f5;
+    --card-border: #e0e0e0;
+    --link-color: #0066cc;
+    --link-hover: #004499;
+    
+    /* Calculator specific */
+    --controls-bg: #f5f5f5;
+    --input-bg: #ffffff;
+    --input-border: #cccccc;
+    --explanation-bg: #f9f9f9;
+    --chart-grid: rgba(0, 0, 0, 0.1);
+    --blue-color: blue;
+    --blue-bg: rgba(0, 0, 255, 0.1);
+    --red-color: red;
+}
+
+[data-theme="dark"] {
+    /* Dark theme variables */
+    --bg-color: #222222;
+    --text-color: #ffffff;
+    --heading-color: #ffffff;
+    
+    /* Common UI elements */
+    --card-bg: #333333;
+    --card-border: #444444;
+    --link-color: #4d94ff;
+    --link-hover: #80b3ff;
+    
+    /* Calculator specific */
+    --controls-bg: #333333;
+    --input-bg: #444444;
+    --input-border: #555555;
+    --explanation-bg: #333333;
+    --chart-grid: rgba(215, 215, 215, 0.1);
+    --blue-color: #4d94ff;
+    --blue-bg: rgba(77, 148, 255, 0.1);
+    --red-color: #ff6666;
+}
+
+/* Common theme-related styles */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+h1, h2, h3 {
+    color: var(--heading-color);
+    transition: color 0.3s;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.theme-btn {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.theme-btn:hover {
+    opacity: 0.9;
+}
